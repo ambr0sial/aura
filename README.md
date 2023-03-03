@@ -51,7 +51,7 @@ For now, the only way to use Aura is to host your own instance, which is describ
     discord.py - pip install discord.py
     pystyle - pip install pystyle
     
-  15. Edit the `conf.json` file:
+  13. Edit the `conf.json` file:
   
     token: Enter your bot token which can be copied at the Discord Developer Applications Page,
     prefix: Enter the bot prefix. Default is "aura!",
