@@ -3,6 +3,13 @@ import discord
 import asyncio
 import json
 import os
+from pystyle import *
+
+ascii_art = r"""
+ ,--.  __   _   _ .--.  ,--.   
+`'_\ :[  | | | [ `/'`\]`'_\ :  
+// | |,| \_/ |, | |    // | |, 
+\'-;__/'.__.'_/[___]   \'-;__/"""[1:]
 
 with open('conf.json') as f:
 	config = json.load(f)
@@ -22,8 +29,8 @@ def clear():
 @aura.event
 async def on_ready():
 	clear()
-	print(f'[AURA] Logged in as: {aura.user} (ID: {aura.user.id})')
-	print('------\n')
+	print(Colorate.Diagonal(color=Colors.blue_to_white, text=Center.XCenter(ascii_art+"\n")))
+	print(Box.Lines(f"AURA - Logged in as: {aura.user} (ID: {aura.user.id})\nAURA - Number of guilds: {len(aura.guilds)}\n\nAURA CURRENT SETTINGS:\nPrefix: {prefix}\nMode: {mode}"))
 
 @aura.event
 async def on_command(ctx):
@@ -92,8 +99,8 @@ async def stats(ctx):
 @aura.command()
 async def cls(ctx):
 	clear()
-	print(f'[AURA] Logged in as: {aura.user} (ID: {aura.user.id})')
-	print('------\n')
+	print(Colorate.Diagonal(color=Colors.blue_to_white, text=Center.XCenter(ascii_art+"\n")))
+	print(Box.Lines(f"AURA - Logged in as: {aura.user} (ID: {aura.user.id})\nAURA - Number of guilds: {len(aura.guilds)}\n\nAURA CURRENT SETTINGS:\nPrefix: {prefix}\nMode: {mode}"))
 
 @aura.command()
 async def ping(ctx):
