@@ -46,8 +46,10 @@ For now, the only way to use Aura is to host your own instance, which is describ
   9. Select the server in which you want Aura to be in, then invite it.
   10. Create a new folder on your computer, then open a command prompt in it.
   11. Execute the following: git clone https://github.com/CColdFox/aura.git (this will clone this repository into your newly created folder)
-  12. If not installed yet, install Python and the discord.py library using "pip install discord.py".
-  13. Edit the `conf.json` file:
+  12. If not installed yet, install Python and the following libraries:
+    * discord.py library - "pip install discord.py"
+    * pystyle library - "pip install pystyle"
+  15. Edit the `conf.json` file:
   
     token: Enter your bot token which can be copied at the Discord Developer Applications Page,
     prefix: Enter the bot prefix. Default is "aura!",
