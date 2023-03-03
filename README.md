@@ -56,6 +56,7 @@ For now, the only way to use Aura is to host your own instance, which is describ
     token: Enter your bot token which can be copied at the Discord Developer Applications Page,
     prefix: Enter the bot prefix. Default is "aura!",
     mode: Enter your preferred mode between "embed" and "codeblock". Default is "embed",
+    devs: Enter user IDS that should have permission to use Aura Developer commands,
     
     then save and close the file.
   14. Run the `aura.py` file. Aura should be running! Try it using the ping command.
