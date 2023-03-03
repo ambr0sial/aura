@@ -1,5 +1,6 @@
 {
 	"token": "bot-token-here",
 	"prefix": "aura!",
-	"mode": "embed"
+	"mode": "embed",
+	"devs": "user-ids-here"
 }
