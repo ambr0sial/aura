@@ -17,6 +17,7 @@ with open('conf.json') as f:
 token = config.get('token')
 prefix = config.get('prefix')
 mode = config.get('mode')
+devs = config.get('devs')
 
 aura = commands.Bot(command_prefix=prefix, case_insensitive=True, help_command=None)
 
@@ -25,6 +26,9 @@ def clear():
 		os.system("cls")
 	else:
 		os.system("clear")
+
+def is_admin(ctx):
+	return ctx.author.guild_permissions.administrator
 
 @aura.event
 async def on_ready():
@@ -98,21 +102,78 @@ async def stats(ctx):
 
 @aura.command()
 async def cls(ctx):
-	clear()
-	print(Colorate.Diagonal(color=Colors.blue_to_white, text=Center.XCenter(ascii_art+"\n")))
-	print(Box.Lines(f"AURA - Logged in as: {aura.user} (ID: {aura.user.id})\nAURA - Number of guilds: {len(aura.guilds)}\n\nAURA CURRENT SETTINGS:\nPrefix: {prefix}\nMode: {mode}"))
+	if str(ctx.author.id) in devs:
+		clear()
+		print(Colorate.Diagonal(color=Colors.blue_to_white, text=Center.XCenter(ascii_art+"\n")))
+		print(Box.Lines(f"AURA - Logged in as: {aura.user} (ID: {aura.user.id})\nAURA - Number of guilds: {len(aura.guilds)}\n\nAURA CURRENT SETTINGS:\nPrefix: {prefix}\nMode: {mode}"))
+	else:
+		await ctx.message.add_reaction("❌")
 
 @aura.command()
 async def ping(ctx):
-	latency = round(bot.latency * 1000)
+	latency = round(aura.latency * 1000)
 	if mode == 'embed':
 		embed = discord.Embed(title=f'Aura - Ping', color=discord.Color.blue())
 		embed.set_thumbnail(url="https://user-images.githubusercontent.com/81994421/222477873-b62baf91-9968-45be-9537-3562b1a2ef4a.png")
-		embed.add_field(name='Latency', value=latency, inline=True)
+		embed.add_field(name='Latency', value=f"{latency}ms", inline=True)
+		await ctx.send(embed=embed)
 	elif mode == 'codeblock':
 		await ctx.send(f"""```ansi
 [ [2;34mAura[0m - Ping ]
 
-• [2;34mLatency[0m: {latency}```""")
+• [2;34mLatency[0m: {latency}ms```""")
+
+@aura.command()
+async def help(ctx):
+	if mode == 'embed':
+		cmds = f"""
+{prefix}help
+{prefix}ping
+{prefix}stats
+{prefix}cls
+"""
+		embed = discord.Embed(title=f'Aura - Help', color=discord.Color.blue())
+		embed.set_thumbnail(url="https://user-images.githubusercontent.com/81994421/222477873-b62baf91-9968-45be-9537-3562b1a2ef4a.png")
+		embed.add_field(name='List of commands', value=cmds, inline=True)
+		await ctx.send(embed=embed)
+	elif mode == 'codeblock':
+		await ctx.send(f"""```ansi
+[ [2;34mAura[0m - Help ]
+
+List of commands (those in red are only executable by users noted as Developers in the config and those in yellow are only executable by server admins):
+
+{prefix}[2;34mhelp[0m
+{prefix}[2;34mping[0m
+{prefix}[2;34mstats[0m
+{prefix}[2;31mcls[0m
+{prefix}[2;33mkick[0m```""")
+
+@aura.command()
+@commands.check(is_admin)
+async def kick(ctx, member: discord.Member, *, reason=None):
+	if mode == 'embed':
+		try:
+			await member.kick(reason=reason)
+			embed = discord.Embed(title=f'Aura - Kick', color=discord.Color.blue())
+			embed.set_thumbnail(url="https://user-images.githubusercontent.com/81994421/222477873-b62baf91-9968-45be-9537-3562b1a2ef4a.png")
+			embed.add_field(name=f'{member} has been kicked', value=f"Reason: {reason}", inline=True)
+			await ctx.send(embed=embed)
+		except Exception as e:
+			embed = discord.Embed(title=f'Aura - Kick', color=discord.Color.blue())
+			embed.set_thumbnail(url="https://user-images.githubusercontent.com/81994421/222477873-b62baf91-9968-45be-9537-3562b1a2ef4a.png")
+			embed.add_field(name=f'An error occurred', value=f"{member} could not be kicked", inline=True)
+			await ctx.send(embed=embed)
+	elif mode == 'codeblock':
+		try:
+			await member.kick(reason=reason)
+			await ctx.send(f"""```ansi
+[ [2;34mAura[0m - Kick ]
+[2;31m
+{member}[0m has been kicked for the following reason: [2;31m{reason}[0m```""")
+		except Exception as e:
+			await ctx.send(f"""```ansi
+[ [2;31m[2;34mAura[0m[2;31m[0m - Kick ]
+
+An error occurred and [2;31m{member}[0m could not be kicked.```""")
 
 aura.run(token)
